@@ -1,0 +1,31 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Sentimo\Client\HttpClient\Client:
+        public: true
+        arguments:
+            $httpClient: '@GuzzleHttp\Client'
+            $cache: '@Symfony\Component\Cache\Adapter\FilesystemAdapter'
+            $config: '@Sentimo\Client\Config'
+            $requestParamBuilder: '@Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder'
+
+    GuzzleHttp\Client:
+        arguments:
+            $config:
+                base_uri: '%api.base_uri%'
+
+    Symfony\Component\Cache\Adapter\FilesystemAdapter: ~
+
+    Sentimo\Client\Config:
+        arguments:
+            - '%api.key%'
+
+    Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder: ~
+
+    Sentimo\Client\RequestParam\ReviewGetRequestParamBuilder:
+        arguments:
+            $paramBuilder: '@Sentimo\Client\RequestParam\GenericRequestParamBuilder'
+
+    Sentimo\Client\RequestParam\GenericRequestParamBuilder: ~
