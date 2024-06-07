@@ -19,7 +19,7 @@ interface ProductInterface
     /**
      * @return string|null
      */
-    public function getPrice(): ?string;
+    public function getPrice(): ?int;
 
     /**
      * @return string|null

@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 use Sentimo\Client\Config;
 use Sentimo\Client\Exception\LocalizedException;
 use Sentimo\Client\RequestParam\ReviewGetRequestParamBuilder;
+use Sentimo\Client\ReviewFactory;
 use Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
@@ -18,6 +19,7 @@ class Client
     private GuzzleClient $httpClient;
     private FilesystemAdapter $cache;
     private Config $config;
+    private ReviewFactory $reviewFactory;
     private ReviewPostRequestParamBuilder $requestParamBuilder;
 
     private ?string $jwtToken = null;
@@ -26,11 +28,13 @@ class Client
         GuzzleClient $httpClient,
         FilesystemAdapter $cache,
         Config $config,
+        ReviewFactory $reviewFactory,
         ReviewPostRequestParamBuilder $requestParamBuilder
     ) {
         $this->httpClient = $httpClient;
         $this->cache = $cache;
         $this->config = $config;
+        $this->reviewFactory = $reviewFactory;
         $this->requestParamBuilder = $requestParamBuilder;
 
         $this->login();
@@ -38,11 +42,12 @@ class Client
 
     /**
      * @param \Sentimo\Client\Api\Data\ReviewInterface[] $reviews
+     * @param string|null $channel
      *
      * @return int[]
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Sentimo\Client\Exception\LocalizedException
      */
-    public function postReviews(array $reviews): array
+    public function postReviews(array $reviews, ?string $channel): array
     {
         $postedReviewIds = [];
 
@@ -54,7 +59,7 @@ class Client
                         'Accept' => 'application/ld+json',
                         'Content-type' => 'application/ld+json',
                     ],
-                    'json' => $this->requestParamBuilder->buildRequestParam($review),
+                    'json' => $this->requestParamBuilder->buildRequestParam($review, $channel),
                 ]);
 
                 $responseBody = $response->getBody()->getContents();
@@ -115,7 +120,7 @@ class Client
      * @param \Sentimo\Client\RequestParam\ReviewGetRequestParamBuilder $paramBuilder
      * @param bool $fetchAll
      *
-     * @return array<string, mixed>
+     * @return \Sentimo\Client\Api\Data\ReviewInterface[]
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Sentimo\Client\Exception\LocalizedException
      */
@@ -163,8 +168,8 @@ class Client
 
             $reviews = $decodedContent['hydra:member'];
 
-            foreach ($reviews as $review) {
-                $allReviews[] = $review;
+            foreach ($reviews as $reviewData) {
+                $allReviews[] = $this->reviewFactory->create($reviewData);
             }
 
             $nextPage = $decodedContent['hydra:view']['hydra:next'] ?? null;

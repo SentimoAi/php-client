@@ -8,14 +8,14 @@ class Review implements ReviewInterface
 {
     private string $content;
     private ?string $moderationStatus;
-    private AuthorInterface $author;
+    private ?AuthorInterface $author;
     private ?string $externalId;
     private ?ProductInterface $product;
     private ?int $rating;
 
     public function __construct(
         string $content,
-        AuthorInterface $author,
+        ?AuthorInterface $author = null,
         ?string $moderationStatus = null,
         ?string $externalId = null,
         ?ProductInterface $product = null,

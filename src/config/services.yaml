@@ -10,6 +10,7 @@ services:
             $cache: '@Symfony\Component\Cache\Adapter\FilesystemAdapter'
             $config: '@Sentimo\Client\Config'
             $requestParamBuilder: '@Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder'
+            $reviewFactory: '@Sentimo\Client\ReviewFactory'
 
     GuzzleHttp\Client:
         arguments:
@@ -29,3 +30,5 @@ services:
             $paramBuilder: '@Sentimo\Client\RequestParam\GenericRequestParamBuilder'
 
     Sentimo\Client\RequestParam\GenericRequestParamBuilder: ~
+
+    Sentimo\Client\ReviewFactory: ~
