@@ -25,10 +25,4 @@ services:
 
     Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder: ~
 
-    Sentimo\Client\RequestParam\ReviewGetRequestParamBuilder:
-        arguments:
-            $paramBuilder: '@Sentimo\Client\RequestParam\GenericRequestParamBuilder'
-
-    Sentimo\Client\RequestParam\GenericRequestParamBuilder: ~
-
     Sentimo\Client\ReviewFactory: ~

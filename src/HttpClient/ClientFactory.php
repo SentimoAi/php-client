@@ -8,8 +8,8 @@ use Sentimo\Client\ContainerFactory;
 
 class ClientFactory
 {
-    public static function createClient(string $apiKey): Client
+    public function createClient(string $apiKey): Client
     {
-        return ContainerFactory::createContainer($apiKey)->get(Client::class);
+        return ContainerFactory::createContainer($apiKey)->get(Client::class)->initialize();
     }
 }

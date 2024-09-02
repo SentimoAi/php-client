@@ -11,33 +11,30 @@ use Sentimo\Client\Exception\LocalizedException;
 use Sentimo\Client\RequestParam\ReviewGetRequestParamBuilder;
 use Sentimo\Client\ReviewFactory;
 use Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class Client
 {
     private const JWT_TOKEN_CACHE_KEY = 'sentimo_review_analysis_jwt_token';
-    private GuzzleClient $httpClient;
-    private FilesystemAdapter $cache;
-    private Config $config;
-    private ReviewFactory $reviewFactory;
-    private ReviewPostRequestParamBuilder $requestParamBuilder;
 
     private ?string $jwtToken = null;
 
-    public function __construct(
-        GuzzleClient $httpClient,
-        FilesystemAdapter $cache,
-        Config $config,
-        ReviewFactory $reviewFactory,
-        ReviewPostRequestParamBuilder $requestParamBuilder
-    ) {
-        $this->httpClient = $httpClient;
-        $this->cache = $cache;
-        $this->config = $config;
-        $this->reviewFactory = $reviewFactory;
-        $this->requestParamBuilder = $requestParamBuilder;
+    private array $errors = [];
 
+    public function __construct(
+        private readonly GuzzleClient $httpClient,
+        private readonly CacheInterface $cache,
+        private readonly Config $config,
+        private readonly ReviewFactory $reviewFactory,
+        private readonly ReviewPostRequestParamBuilder $requestParamBuilder
+    ) {
+    }
+
+    public function initialize(): self
+    {
         $this->login();
+
+        return $this;
     }
 
     /**
@@ -92,23 +89,18 @@ class Client
 
                 $postedReviewIds[] = $externalId;
             } catch (RequestException $exception) {
-                throw new LocalizedException(
-                    sprintf(
-                        'Error posting review with external ID = %s: %s',
-                        $review->getExternalId() ?? 'N/A',
-                        $exception->getMessage()
-                    ),
-                    0,
-                    $exception
+                $responseBody = $exception->getResponse()?->getBody()->getContents() ?? 'No response body';
+                $this->errors[] = sprintf(
+                    'Error posting review with external ID = %s: %s Response: %s',
+                    $review->getExternalId() ?? 'N/A',
+                    $exception->getMessage(),
+                    $responseBody
                 );
             } catch (\Throwable $exception) {
-                throw new LocalizedException(
-                    sprintf(
-                        'An unexpected error occurred: %s',
-                        $exception->getMessage()
-                    ),
-                    0,
-                    $exception
+                $this->errors[] = sprintf(
+                    'Error posting review with external ID = %s: %s',
+                    $review->getExternalId() ?? 'N/A',
+                    $exception->getMessage()
                 );
             }
         }
@@ -126,7 +118,6 @@ class Client
      */
     public function getReviews(ReviewGetRequestParamBuilder $paramBuilder, bool $fetchAll = false): array
     {
-        $this->login();
         $allReviews = [];
 
         $queryParams = $paramBuilder->build();
@@ -188,9 +179,12 @@ class Client
         return $allReviews;
     }
 
-    public static function createReviewGetRequestParamBuilder(): ReviewGetRequestParamBuilder
+    /**
+     * @return string[]
+     */
+    public function getErrors(): array
     {
-        return new ReviewGetRequestParamBuilder();
+        return $this->errors;
     }
 
     private function login(): void

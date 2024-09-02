@@ -6,11 +6,8 @@ namespace Sentimo\Client\RequestParam;
 
 class ReviewGetRequestParamBuilder
 {
-    private GenericRequestParamBuilder $paramBuilder;
-
-    public function __construct(?GenericRequestParamBuilder $paramBuilder = null)
+    public function __construct(private array $params = [])
     {
-        $this->paramBuilder = $paramBuilder ?? new GenericRequestParamBuilder();
     }
 
     /**
@@ -22,8 +19,7 @@ class ReviewGetRequestParamBuilder
      */
     public function setExternalIds(array $ids): self
     {
-        $this->paramBuilder->setParam('externalId', $ids);
-
+        $this->params['externalId'] = $ids;
         return $this;
     }
 
@@ -36,8 +32,7 @@ class ReviewGetRequestParamBuilder
      */
     public function setModerationStatus(string $moderationStatus): self
     {
-        $this->paramBuilder->setParam('moderationStatus', $moderationStatus);
-
+        $this->params['moderationStatus'] = $moderationStatus;
         return $this;
     }
 
@@ -50,8 +45,7 @@ class ReviewGetRequestParamBuilder
      */
     public function hasModerationStatus(bool $exists): self
     {
-        $this->paramBuilder->setParam('exists', ['moderationStatus' => $exists]);
-
+        $this->params['exists']['moderationStatus'] = $exists;
         return $this;
     }
 
@@ -64,8 +58,7 @@ class ReviewGetRequestParamBuilder
      */
     public function setChannel(string $channel): self
     {
-        $this->paramBuilder->setParam('channel', $channel);
-
+        $this->params['channel'] = $channel;
         return $this;
     }
 
@@ -78,8 +71,7 @@ class ReviewGetRequestParamBuilder
      */
     public function setProductIdentifier(string $productIdentifier): self
     {
-        $this->paramBuilder->setParam('product.identifier', $productIdentifier);
-
+        $this->params['product.identifier'] = $productIdentifier;
         return $this;
     }
 
@@ -93,9 +85,8 @@ class ReviewGetRequestParamBuilder
      */
     public function setOrder(string $property, string $direction): self
     {
-        $this->paramBuilder->setParam('order[' . $property . ']', $direction);
-
-        return $this;
+        $this->params['order[' . $property . ']'] = $direction;
+        return this;
     }
 
     /**
@@ -108,8 +99,7 @@ class ReviewGetRequestParamBuilder
      */
     public function setDateFilter(string $property, string $value): self
     {
-        $this->paramBuilder->setParam($property, $value);
-
+        $this->params[$property] = $value;
         return $this;
     }
 
@@ -120,6 +110,6 @@ class ReviewGetRequestParamBuilder
      */
     public function build(): array
     {
-        return $this->paramBuilder->getParams();
+        return $this->params;
     }
 }

@@ -11,19 +11,18 @@ class ReviewPostRequestParamBuilder
     public function buildRequestParam(ReviewInterface $review, ?string $channel = null): array
     {
         $product = $review->getProduct();
-
         $params = [
             'content' => $review->getContent(),
-            'externalId' => $review->getExternalId() ?? '',
+            'externalId' => $review->getExternalId(),
             'channel' => $channel ?? '',
-            'rating' => $review->getRating() ?? '',
+            'rating' => $review->getRating() ?? null,
         ];
 
         if ($product !== null) {
             $params['product'] = [
                 'name' => $product->getName(),
                 'description' => $product->getDescription() ?? '',
-                'price' => $product->getPrice() ?? '',
+                'price' => $product->getPrice() ? (string) $product->getPrice() : null,
                 'identifier' => $product->getIdentifier() ?? '',
                 'productType' => $product->getProductType() ?? '',
             ];
