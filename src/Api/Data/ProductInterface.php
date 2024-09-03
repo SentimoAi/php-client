@@ -17,9 +17,9 @@ interface ProductInterface
     public function getDescription(): ?string;
 
     /**
-     * @return string|null
+     * @return float|null
      */
-    public function getPrice(): ?int;
+    public function getPrice(): ?float;
 
     /**
      * @return string|null

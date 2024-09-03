@@ -16,7 +16,7 @@ class Product implements ProductInterface
     public function __construct(
         private readonly string $name,
         private readonly ?string $description = null,
-        private readonly ?int $price = null,
+        private readonly ?float $price = null,
         private readonly ?string $productType = null,
         private readonly ?string $identifier = null
     ) {
@@ -37,7 +37,7 @@ class Product implements ProductInterface
         return $this->description;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?float
     {
         return $this->price;
     }
