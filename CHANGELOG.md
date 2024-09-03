@@ -23,7 +23,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Security
 - (List any security fixes)
 
-## [1.0.0] - YYYY-MM-DD
+## [1.0.1] - 2024-09-03
+
+### Changed
+- Add compatibility with symfony/dependency-injection 5.4 and symfony/config 5.4.
+
+### Fixed
+- Fix price type in the Product data model.
+
+## [1.0.0] - 2024-09-02
 ### Added
 - Initial release of the Sentimo PHP Client SDK.
 - Implemented `Client` class for interacting with the Sentimo API.
