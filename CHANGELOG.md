@@ -23,6 +23,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Security
 - (List any security fixes)
 
+## [1.1.2] - 2024-12-11
+
+### Changed
+- Fix Changelog content.
+
+## [1.1.1] - 2024-12-11
+
+### Changed
+- Fix refresh token retrieval in the Client class.
+
+## [1.1.0] - 2024-09-12
+
+### Changed
+- Add compatibility with symfony 7.
+
 ## [1.0.1] - 2024-09-03
 
 ### Changed
