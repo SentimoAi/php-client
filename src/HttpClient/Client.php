@@ -192,7 +192,11 @@ class Client
         $this->jwtToken = $this->getJwtToken();
         if ($this->jwtToken === null || $this->isTokenExpired($this->jwtToken)) {
             $response = $this->httpClient->post('/api/token/refresh', [
-                'form_params' => ['refresh_token' => $this->config->getApiKey()]
+                'json' => ['refresh_token' => $this->config->getApiKey()],
+                'headers' => [
+                    'Accept' => 'application/ld+json',
+                    'Content-type' => 'application/ld+json',
+                ],
             ]);
 
             $body = $response->getBody()->getContents();
