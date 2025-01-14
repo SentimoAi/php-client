@@ -22,6 +22,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Security
 - (List any security fixes)
+- 
+## [1.1.3] - 2025-01-14
+
+### Changed
+- Fix Typo in Param request Builder.
 
 ## [1.1.2] - 2024-12-11
 

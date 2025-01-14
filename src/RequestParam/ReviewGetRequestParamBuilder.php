@@ -86,7 +86,7 @@ class ReviewGetRequestParamBuilder
     public function setOrder(string $property, string $direction): self
     {
         $this->params['order[' . $property . ']'] = $direction;
-        return this;
+        return $this;
     }
 
     /**
