@@ -22,20 +22,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Security
 - (List any security fixes)
-- 
-## [1.1.3] - 2025-01-14
+
+## [1.1.4] - 2025-01-15
+
+### Fixed
+- Fix pagination when fetching reviews.
 
 ### Changed
+- Change response handling when fetching reviews due to api response changes.
+
+## [1.1.3] - 2025-01-14
+
+### Fixed
 - Fix Typo in Param request Builder.
 
 ## [1.1.2] - 2024-12-11
 
-### Changed
+### Fixed
 - Fix Changelog content.
 
 ## [1.1.1] - 2024-12-11
 
-### Changed
+### Fixed
 - Fix refresh token retrieval in the Client class.
 
 ## [1.1.0] - 2024-09-12
