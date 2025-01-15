@@ -153,17 +153,17 @@ class Client
                 );
             }
 
-            if (!isset($decodedContent['hydra:member']) || !is_array($decodedContent['hydra:member'])) {
+            if (!isset($decodedContent['member']) || !is_array($decodedContent['member'])) {
                 throw new LocalizedException('Unexpected response structure.');
             }
 
-            $reviews = $decodedContent['hydra:member'];
+            $reviews = $decodedContent['member'];
 
             foreach ($reviews as $reviewData) {
                 $allReviews[] = $this->reviewFactory->create($reviewData);
             }
 
-            $nextPage = $decodedContent['hydra:view']['hydra:next'] ?? null;
+            $nextPage = $decodedContent['view']['next'] ?? null;
 
             if ($fetchAll && $nextPage) {
                 parse_str(parse_url($nextPage, PHP_URL_QUERY), $nextPageParams);
