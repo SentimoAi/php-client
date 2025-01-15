@@ -165,7 +165,7 @@ class Client
 
             $nextPage = $decodedContent['view']['next'] ?? null;
 
-            if ($fetchAll && $nextPage) {
+            if (!$fetchAll && $nextPage) {
                 parse_str(parse_url($nextPage, PHP_URL_QUERY), $nextPageParams);
 
                 foreach ($nextPageParams as $key => $value) {
@@ -174,7 +174,7 @@ class Client
             } else {
                 $nextPage = null;
             }
-        } while ($fetchAll && $nextPage);
+        } while (!$fetchAll && $nextPage);
 
         return $allReviews;
     }
