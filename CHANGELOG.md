@@ -23,6 +23,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Security
 - (List any security fixes)
 
+## [1.2.0] - 2025-05-02
+
+### Changed
+- Use api key authentication instead of JWT token for the Client class.
+
 ## [1.1.4] - 2025-01-15
 
 ### Fixed
