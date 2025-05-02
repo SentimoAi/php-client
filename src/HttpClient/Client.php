@@ -11,7 +11,6 @@ use Sentimo\Client\Exception\LocalizedException;
 use Sentimo\Client\RequestParam\ReviewGetRequestParamBuilder;
 use Sentimo\Client\ReviewFactory;
 use Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class Client
 {
@@ -23,18 +22,10 @@ class Client
 
     public function __construct(
         private readonly GuzzleClient $httpClient,
-        private readonly CacheInterface $cache,
         private readonly Config $config,
         private readonly ReviewFactory $reviewFactory,
         private readonly ReviewPostRequestParamBuilder $requestParamBuilder
     ) {
-    }
-
-    public function initialize(): self
-    {
-        $this->login();
-
-        return $this;
     }
 
     /**
@@ -52,7 +43,7 @@ class Client
             try {
                 $response = $this->httpClient->post('/api/reviews', [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $this->jwtToken,
+                        'x-api-key' => $this->config->getApiKey(),
                         'Accept' => 'application/ld+json',
                         'Content-type' => 'application/ld+json',
                     ],
@@ -125,7 +116,7 @@ class Client
         do {
             $response = $this->httpClient->get('/api/reviews', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $this->jwtToken,
+                    'x-api-key' => $this->config->getApiKey(),
                     'Accept' => 'application/ld+json',
                     'Content-type' => 'application/ld+json',
                 ],
@@ -185,51 +176,5 @@ class Client
     public function getErrors(): array
     {
         return $this->errors;
-    }
-
-    private function login(): void
-    {
-        $this->jwtToken = $this->getJwtToken();
-        if ($this->jwtToken === null || $this->isTokenExpired($this->jwtToken)) {
-            $response = $this->httpClient->post('/api/token/refresh', [
-                'json' => ['refresh_token' => $this->config->getApiKey()],
-                'headers' => [
-                    'Accept' => 'application/ld+json',
-                    'Content-type' => 'application/ld+json',
-                ],
-            ]);
-
-            $body = $response->getBody()->getContents();
-            $data = json_decode($body, true);
-            $this->jwtToken = $data['token'] ?? null;
-
-            if (!$this->jwtToken) {
-                throw new LocalizedException('Failed to retrieve JWT token');
-            }
-
-            $this->cacheJwtToken($this->jwtToken);
-        }
-    }
-
-    private function getJwtToken(): ?string
-    {
-        $item = $this->cache->getItem(self::JWT_TOKEN_CACHE_KEY);
-
-        return $item->isHit() ? $item->get() : null;
-    }
-
-    private function cacheJwtToken(string $jwtToken): void
-    {
-        $item = $this->cache->getItem(self::JWT_TOKEN_CACHE_KEY);
-        $item->set($jwtToken);
-        $item->expiresAfter(3600); // 1 hour
-        $this->cache->save($item);
-    }
-
-    private function isTokenExpired(string $token): bool
-    {
-        $parts = explode('.', $token);
-        $payload = json_decode(base64_decode($parts[1]), true);
-        return $payload['exp'] < time();
     }
 }

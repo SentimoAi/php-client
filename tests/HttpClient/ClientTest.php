@@ -67,34 +67,6 @@ class ClientTest extends TestCase
         $this->assertEquals(['12345'], $result);
     }
 
-    public function testInitialize(): void
-    {
-        $this->config->method('getApiKey')->willReturn('test_api_key');
-
-        $tokenStream = $this->createMock(StreamInterface::class);
-        $tokenStream->method('getContents')
-            ->willReturn(
-                json_encode(['token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' .
-                    base64_encode(json_encode(['exp' => time() + 3600])) .
-                    '.signature'
-                ])
-            );
-
-        $response = $this->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $response->method('getStatusCode')->willReturn(200);
-        $response->method('getBody')->willReturn($tokenStream);
-
-        $this->httpClient->expects($this->once())
-            ->method('post')
-            ->willReturn($response);
-
-        $this->client->initialize();
-
-        $this->assertInstanceOf(Client::class, $this->client);
-    }
-
     public function testPostReviewsFailureNoExternalId(): void
     {
         $mockReview = $this->createMock(\Sentimo\Client\Api\Data\ReviewInterface::class);
