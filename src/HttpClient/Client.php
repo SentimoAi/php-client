@@ -70,8 +70,8 @@ class Client
 
                 $externalId = $responseData['externalId'] ?? null;
 
-                if ($externalId === null) {
-                    throw new LocalizedException(sprintf('External ID not found in response: %s', $responseBody));
+                if (empty($externalId) || !is_numeric($externalId)) {
+                    throw new LocalizedException(sprintf('Invalid external ID in response: %s', $responseBody));
                 }
 
                 $postedReviewIds[] = $externalId;
