@@ -14,10 +14,6 @@ use Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder;
 
 class Client
 {
-    private const JWT_TOKEN_CACHE_KEY = 'sentimo_review_analysis_jwt_token';
-
-    private ?string $jwtToken = null;
-
     private array $errors = [];
 
     public function __construct(
