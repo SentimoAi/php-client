@@ -10,6 +10,6 @@ class ClientFactory
 {
     public function createClient(string $apiKey): Client
     {
-        return ContainerFactory::createContainer($apiKey)->get(Client::class)->initialize();
+        return ContainerFactory::createContainer($apiKey)->get(Client::class);
     }
 }

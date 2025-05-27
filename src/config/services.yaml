@@ -7,7 +7,6 @@ services:
         public: true
         arguments:
             $httpClient: '@GuzzleHttp\Client'
-            $cache: '@Symfony\Component\Cache\Adapter\FilesystemAdapter'
             $config: '@Sentimo\Client\Config'
             $requestParamBuilder: '@Sentimo\Client\RequestParam\ReviewPostRequestParamBuilder'
             $reviewFactory: '@Sentimo\Client\ReviewFactory'
