@@ -23,6 +23,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Security
 - (List any security fixes)
 
+## [1.2.1] - 2025-08-04
+
+### Fixed
+- Fix issue with missing symfony/yaml dependency
+
 ## [1.2.0] - 2025-05-02
 
 ### Changed
